@@ -1,0 +1,2 @@
+# Type in names of all client nodes and save this file
+# Example: samplenode@127.0.0.1
