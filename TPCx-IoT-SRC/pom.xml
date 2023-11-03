@@ -116,6 +116,7 @@ LICENSE file.
     <arangodb3.version>4.1.7</arangodb3.version>
     <azurestorage.version>4.0.0</azurestorage.version>
     <hbase12.version>1.2.5</hbase12.version>
+    <iginx.version>0.6.0-SNAPSHOT</iginx.version>
   </properties>
 
   <modules>
@@ -145,8 +146,9 @@ LICENSE file.
     <module>hbase12</module>
     <module>lindormtsdb</module>
     <module>machbase</module>
-    <!--<module>hypertable</module>
-    <module>infinispan</module>
+    <!--<module>hypertable</module>-->
+    <module>iginx</module>
+    <!--<module>infinispan</module>
     <module>jdbc</module>
     <module>kudu</module>
     <module>mapkeeper</module>
