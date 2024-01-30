@@ -89,6 +89,10 @@ public class CoreWorkload extends Workload {
 
   protected String client;
 
+  protected int nodeno;
+
+  protected int instanceno;
+
   protected String runType;
 
   long runStartTime;
@@ -260,6 +264,14 @@ public class CoreWorkload extends Workload {
                    "side_7_Pneumatic_level",
                    "ang_30_Pneumatic_level"
    };
+//   private int totalinsertcount = 1_000_000_000;
+   private long totalinsertcount = 4_000_000_000L;
+   private int nodenum = 4;
+   private int instancenum = 11;
+   private int insertcount = (int) (totalinsertcount / nodenum / instancenum);
+//   private int[] choseninstances = {42, 30, 39, 29, 44, 5, 34, 24, 16}; // 1 1 3 4
+   private int[] choseninstances = {42, 40, 39, 38, 44, 43, 34, 37, 41}; // 0 0 0 9
+//   private int[] choseninstances = {1, 2, 12, 13, 23, 24, 34, 35, 36}; // 2 2 2 3
 
   private List<String> fieldnames;
 
@@ -541,6 +553,8 @@ public class CoreWorkload extends Workload {
   public void init(Properties p) throws WorkloadException {
     table = p.getProperty(TABLENAME_PROPERTY, TABLENAME_PROPERTY_DEFAULT);
      client = p.getProperty(CLIENT_NAME, DEFAULT_CLIENT_NAME);
+     nodeno = Integer.parseInt(client.substring(3, 4));
+     instanceno = Integer.parseInt(client.substring(4));
       runType = p.getProperty(RUN_TYPE,DEFAULT_RUN_TYPE);
      //System.out.println("CLIENT NAME="+client);
     System.out.println("Run Type = "+runType);
@@ -693,7 +707,9 @@ public class CoreWorkload extends Workload {
         int index = readKeyChooser.nextValue().intValue();
         String prekey = prekeys[index];
         // Read the keys that are than 5s old
-        long t = tt.lastValue() - 5000;
+//        long t = tt.lastValue() - 5000;
+
+        long t = Math.max(0, keychooser.lastValue().intValue() - 5000);
         return   client + ":" + prekey +  ":" + t;
     }
 
@@ -779,6 +795,20 @@ public class CoreWorkload extends Workload {
   @Override
   public boolean doInsert(DB db, Object threadstate) {
     int keynum = keysequence.nextValue().intValue();
+    boolean ischosen = false;
+    int no = (nodeno - 1) * instancenum + instanceno;
+    for (int instance : choseninstances) {
+      if (instance == no) {
+        ischosen = true;
+        break;
+      }
+    }
+    if (!ischosen && keynum >= insertcount / 16) {
+      return true;
+    }
+//    if (keynum >= insertcount / 16 && (nodeno != 1 || instanceno > 9)) {
+//      return true;
+//    }
     String dbkey = buildKeyName(keynum);
     HashMap<String, ByteIterator> values = buildValues(dbkey);
 
@@ -998,6 +1028,8 @@ public class CoreWorkload extends Workload {
     HashSet<String> fields = null;
     Vector <HashMap<String, ByteIterator>> results1 = new Vector <HashMap<String, ByteIterator>>();
     Vector <HashMap<String, ByteIterator>> results2 = new Vector <HashMap<String, ByteIterator>>();
+//    long newRunStartTime = Long.parseLong(timestamp);
+//    db.scan(table, filter, client, timestamp,fields, newRunStartTime > 1800000L ? 0L : newRunStartTime, results1, results2);
     db.scan(table, filter, client, timestamp,fields, runStartTime, results1, results2);
   }
 
@@ -1021,7 +1053,19 @@ public class CoreWorkload extends Workload {
   }
 
   public void doTransactionInsert(DB db) {
-    long keynum = tt.nextValue();
+//    long keynum = tt.nextValue();
+    int keynum = keysequence.nextValue().intValue();
+    boolean ischosen = false;
+    int no = (nodeno - 1) * instancenum + instanceno;
+    for (int instance : choseninstances) {
+      if (instance == no) {
+        ischosen = true;
+        break;
+      }
+    }
+    if (!ischosen && keynum >= insertcount / 16) {
+      return;
+    }
 
     try {
 

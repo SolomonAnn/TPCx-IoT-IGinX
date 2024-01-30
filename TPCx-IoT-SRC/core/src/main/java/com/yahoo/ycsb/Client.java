@@ -751,6 +751,7 @@ public class Client
     Properties props=new Properties();
     Properties fileprops=new Properties();
     boolean dotransactions=true;
+//    boolean dotransactions=false;
     int threadcount=1;
     int target=0;
     boolean status=false;
@@ -808,6 +809,7 @@ public class Client
       else if (args[argindex].compareTo("-t")==0)
       {
         dotransactions=true;
+//        dotransactions=false;
         argindex++;
       }
       else if (args[argindex].compareTo("-s")==0)

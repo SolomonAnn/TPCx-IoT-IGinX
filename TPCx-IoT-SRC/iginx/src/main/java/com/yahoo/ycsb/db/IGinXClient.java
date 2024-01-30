@@ -199,21 +199,25 @@ public class IGinXClient extends DB {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        if (runStartTime > 0L) {
-            long time = newTimeStamp - runStartTime;
-            oldTimeStamp = newTimeStamp - time;
-        } else {
-            oldTimeStamp = newTimeStamp - 1800000L;
-        }
-        long timestampVal =
-                oldTimeStamp + (long) (Math.random() * (newTimeStamp - 10000L - oldTimeStamp));
-        Status s2 = null;
-        try {
-            s2 = scanHelper(deviceId, timestampVal, fields, result2);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        if ((s1 != null && s1.isOk()) && (s2 != null && s2.isOk())) {
+//        if (runStartTime > 0L) {
+//            long time = newTimeStamp - runStartTime;
+//            oldTimeStamp = newTimeStamp - time;
+//        } else {
+//            oldTimeStamp = newTimeStamp - 1800000L;
+//        }
+//        long timestampVal =
+//                oldTimeStamp + (long) (Math.random() * (newTimeStamp - 10000L - oldTimeStamp));
+//        timestampVal = Math.max(0L, timestampVal);
+//        Status s2 = null;
+//        try {
+//            s2 = scanHelper(deviceId, timestampVal, fields, result2);
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        if ((s1 != null && s1.isOk()) && (s2 != null && s2.isOk())) {
+//            return Status.OK;
+//        }
+        if (s1 != null && s1.isOk()) {
             return Status.OK;
         }
         return Status.ERROR;
