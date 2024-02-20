@@ -270,7 +270,7 @@ public class CoreWorkload extends Workload {
    private int instancenum = 11;
    private int insertcount = (int) (totalinsertcount / nodenum / instancenum);
 //   private int[] choseninstances = {42, 30, 39, 29, 44, 5, 34, 24, 16}; // 1 1 3 4
-   private int[] choseninstances = {42, 40, 39, 38, 44, 43, 34, 37, 41}; // 0 0 0 9
+   private int[] choseninstances = {42, 41, 40, 39, 38, 37, 36, 35, 44}; // 0 0 0 9
 //   private int[] choseninstances = {1, 2, 12, 13, 23, 24, 34, 35, 36}; // 2 2 2 3
 
   private List<String> fieldnames;
